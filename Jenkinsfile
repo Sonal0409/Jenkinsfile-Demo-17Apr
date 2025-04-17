@@ -4,7 +4,7 @@ tools{
 maven 'mymaven'
 }
 parameters{
- choice(name: "ENV",choices: ["","Dev","QA"])
+ choice(name: "ENV",choices: ["Dev","Prod","QA"])
 }
 stages{
    stage('Build on Dev Env')
