@@ -12,11 +12,13 @@ stages{
     }
     stage('CompileCode'){
         steps{
+            echo 'Compiling ..'
             sh 'mvn compile'
         }
     }
      stage('Review Code'){
         steps{
+            echo 'Reviewing..'
             sh 'mvn pmd:pmd'
         }
     }
