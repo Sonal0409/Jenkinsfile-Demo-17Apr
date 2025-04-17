@@ -1,46 +1,34 @@
 pipeline{
-    agent any
-    
-    tools{
-    maven 'mymaven'
-    }
-stages{
-    stage('CloneRepo'){
-        steps{
-            git 'https://github.com/Sonal0409/DevOpsCodeDemo.git'
-        }
-    }
-    stage('CompileCode'){
-        steps{
-            echo 'Compiling ..'
-            sh 'mvn compile'
-        }
-    }
-     stage('Review Code'){
-        steps{
-            echo 'Reviewing..'
-            sh 'mvn pmd:pmd'
-        }
-    }
-   stage('TestCode'){
-       steps{
-           sh 'mvn test'  
-       }
-       post{
-          always{
-              echo 'Convert test reports'
-          }
-          success{
-          junit stdioRetention: '', testResults: 'target/surefire-reports/*.xml'
-          }
-       }
-   }
-    stage('PackageCode'){
-        steps{
-            sh 'mvn clean package'
-        }
-    }
+agent any
+tools{
+maven 'mymaven'
 }
+parameters{
+ choice(name: "ENV",choices: ["","Dev","QA"])
+}
+stages{
+   stage('Build on Dev Env')
+   {
+     when{   // keyword for if  
+      expression{params.ENV == "Dev"}  // condition to be satisfied 
+     }
+     steps{
+     git 'https://github.com/Sonal0409/DevOpsCodeDemo.git'
+     sh 'mvn compile'
+     }
+   }
+   stage('Build on QA Env')
+   {
+   when{   // keyword for if  
+    expression{params.ENV == "QA"}  // condition to be satisfied 
+   }
+   steps{
+   git 'https://github.com/Sonal0409/DevOpsCodeDemo.git'
+   sh 'mvn test'
+   }
+   
+   }
 
+}
 }
 
